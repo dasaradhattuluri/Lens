@@ -289,13 +289,18 @@ def hook_status_cmd() -> None:
 
 @main.command("install")
 @click.argument("path", default=".")
-def install_cmd(path: str) -> None:
-    """One-step setup: enable Lens in a workspace.
+@click.option("--no-ingest", is_flag=True, default=False, help="Skip automatic graph build after setup.")
+def install_cmd(path: str, no_ingest: bool) -> None:
+    """One-step setup: enable Lens in a workspace and build the graph.
 
-    Writes Copilot integration files (AGENTS.md, .github/copilot-instructions.md)
-    and installs git hooks so the knowledge graph stays current.
+    Installs Copilot integration (AGENTS.md, copilot-instructions), git hooks,
+    and then automatically builds the knowledge graph — all in one command.
 
-    After running this, use ``lens corpus ingest .`` to build the graph.
+    \b
+    Example:
+      lens install              # set up + build graph for current dir
+      lens install ./my-repo    # set up + build graph for another repo
+      lens install --no-ingest  # set up only, skip graph build
     """
     from lens.copilot_integration import install_copilot
     from lens.hooks import install_hooks
@@ -305,12 +310,12 @@ def install_cmd(path: str) -> None:
     click.echo(f"Setting up Lens in {target} …\n")
 
     # 1. Copilot integration
-    click.echo("  [1/2] Copilot integration")
+    click.echo("  [1/3] Copilot integration")
     for fpath, action in install_copilot(target):
         click.echo(f"         {action}: {fpath}")
 
     # 2. Git hooks (best-effort — repo may not be a git repo yet)
-    click.echo("  [2/2] Git hooks")
+    click.echo("  [2/3] Git hooks")
     try:
         for fpath in install_hooks(target):
             click.echo(f"         installed: {fpath}")
@@ -319,12 +324,19 @@ def install_cmd(path: str) -> None:
     except FileExistsError as exc:
         click.echo(f"         skipped ({exc})")
 
-    click.echo(
-        "\nDone.  Next steps:\n"
-        "  lens corpus ingest .        # build the knowledge graph\n"
-        "  lens graph query --label X  # query a node\n"
-        "  lens report generate        # regenerate reports\n"
-    )
+    # 3. Build the knowledge graph
+    if no_ingest:
+        click.echo("  [3/3] Graph build skipped (--no-ingest)")
+        click.echo(
+            "\nSetup complete.  Run `lens corpus ingest .` when ready to build the graph."
+        )
+    else:
+        click.echo("  [3/3] Building knowledge graph …")
+        ctx = click.get_current_context()
+        ctx.invoke(corpus_ingest, path=path, update=False, full=False)
+        click.echo(
+            "\nDone. Open .lens/artifacts/explorer.html to explore the graph."
+        )
 
 
 # ── copilot ────────────────────────────────────────────────────────────────

@@ -40,13 +40,25 @@ gr
 
 ---
 
-## Installation
-
-### From GitHub (recommended)
+## Install
 
 ```bash
-pip install git+https://github.com/dasaradhattuluri/Lens.git
+pip install microsoft-lens-sdk
 ```
+
+Then open your project and run:
+
+```bash
+lens install
+```
+
+That's it. Lens sets up Copilot integration, installs git hooks, and builds the
+knowledge graph — all in one command.
+
+> **Not on PyPI yet?** Install directly from GitHub:
+> ```bash
+> pip install git+https://github.com/dasaradhattuluri/Lens.git && lens install
+> ```
 
 ### From source (for contributors)
 
@@ -56,52 +68,32 @@ cd Lens
 pip install -e ".[dev]"
 ```
 
-Verify the install:
-
-```bash
-lens --version
-lens --help
-```
-
 ### Ask GitHub Copilot to install it
 
-Open GitHub Copilot Chat in VS Code and type:
+In VS Code Copilot Chat, just say:
 
 ```
-Install the Lens knowledge-graph toolkit:
+Install Lens and run it on my workspace:
 pip install git+https://github.com/dasaradhattuluri/Lens.git
 Then run: lens install
 ```
-
-Copilot will run the commands for you.
 
 ---
 
 ## Quick-start
 
 ```bash
-# 1. Install Lens (pip install as shown above), then:
-lens install                       # set up Copilot integration + git hooks
+# Install + build graph in one step
+pip install git+https://github.com/dasaradhattuluri/Lens.git && lens install
 
-# 2. Build the knowledge graph
-lens corpus ingest .
-
-# 3. View outputs
-ls .lens/artifacts/
-#   knowledge-graph.jsonld
-#   knowledge-graph.graphml
-#   explorer.html
-#   analysis-report.md
-
-# 3. Open the interactive explorer in your browser
+# Open the interactive explorer
 start .lens/artifacts/explorer.html       # Windows
 # open .lens/artifacts/explorer.html      # macOS
-# xdg-open .lens/artifacts/explorer.html  # Linux
 
-# 4. Query a specific node
+# Query a specific node
 lens graph query --label "MyService"
 
-# 5. Start the REST API
+# Start the REST API
 lens api serve
 # → http://127.0.0.1:8400/docs (Swagger UI)
 ```
@@ -121,14 +113,14 @@ lens [--version] [--config PATH] [--help] COMMAND
 ### `lens install` — One-step workspace setup
 
 ```bash
-lens install              # Set up Lens in the current directory
-lens install ./my-repo    # Set up Lens in a specific workspace
+lens install              # Set up Lens + build graph for current dir
+lens install ./my-repo    # Set up Lens + build graph for another repo
+lens install --no-ingest  # Set up only, skip graph build
 ```
 
 Writes Copilot integration files (`AGENTS.md`, `.github/copilot-instructions.md`,
-`.vscode/settings.json`) and installs git hooks — all in one command.
-
-After running this, use `lens corpus ingest .` to build the graph.
+`.vscode/settings.json`), installs git hooks, and automatically builds the
+knowledge graph — all in one command.
 
 ### `lens corpus ingest` — Build the knowledge graph
 
