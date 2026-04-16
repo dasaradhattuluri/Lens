@@ -1,0 +1,11 @@
+.lens/
+__pycache__/
+*.egg-info/
+*.pyc
+*.pyo
+dist/
+build/
+.pytest_cache/
+.venv/
+venv/
+*.egg

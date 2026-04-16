@@ -1,0 +1,15 @@
+corpus_root: .
+output_dir: .lens/artifacts
+cache_dir: .lens/cache
+
+extraction:
+  syntax: true
+  concepts: true
+
+cluster:
+  algorithm: leiden
+  resolution: 1.0
+
+api:
+  host: 127.0.0.1
+  port: 8400
