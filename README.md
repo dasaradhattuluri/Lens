@@ -45,13 +45,13 @@ gr
 ### From GitHub (recommended)
 
 ```bash
-pip install git+https://github.com/dattuluri-microsoft/Lens.git
+pip install git+https://github.com/dasaradhattuluri/Lens.git
 ```
 
 ### From source (for contributors)
 
 ```bash
-git clone https://github.com/dattuluri-microsoft/Lens.git
+git clone https://github.com/dasaradhattuluri/Lens.git
 cd Lens
 pip install -e ".[dev]"
 ```
@@ -69,7 +69,7 @@ Open GitHub Copilot Chat in VS Code and type:
 
 ```
 Install the Lens knowledge-graph toolkit:
-pip install git+https://github.com/dattuluri-microsoft/Lens.git
+pip install git+https://github.com/dasaradhattuluri/Lens.git
 Then run: lens install
 ```
 
